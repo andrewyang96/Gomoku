@@ -47,7 +47,7 @@ function drawBoardHelper(ctx, boardSizePx, boardData, mousePos) {
 		for (var i = 0; i < 19; i++) {
 			var centerY = lowLimit + blockSize * i;
 			for (var j = 0; j < 19; j++) {
-				if (boardData[i][j] != 0) { // TODO differentiate
+				if (boardData[i][j] != 0) {
 					var centerX = lowLimit + blockSize * j;
 					drawPiece(ctx, centerX, centerY, blockSize, boardData[i][j]);
 				}

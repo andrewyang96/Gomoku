@@ -37,27 +37,64 @@ Board.prototype.getBoard = function () {
 	return this.board;
 };
 
+// BEGIN WIN CONDITION CODE
+
 Board.prototype.checkWin = function (who) {
 	// who == 1 or who == -1
 	// Source: http://stackoverflow.com/questions/4312391/board-game-win-situation-searching-algorithm
+	/*
+	var horiz = this.checkHorizontal(who);
+	var vert = this.checkVertical(who);
+	var diag = this.checkDiagonal(who);
+	if (horiz || vert || diag) console.log(horiz + " " + vert + " " + diag);
+	return horiz || vert || diag;
+	*/
 	return this.checkHorizontal(who) || this.checkVertical(who) || this.checkDiagonal(who);
 };
 
 Board.prototype.checkHorizontal = function (who, board) {
+	if (who == 1) {
+		who = "a";
+	} else if (who == -1) {
+		who = "x";
+	} else {
+		throw "who parameter should be 1 or -1";
+	}
 	if (!board) {
 		var board = this.getBoard();
 	}
 	helperStr = "";
 	for (var i = 0; i < this.size; i++) {
 		for (var j = 0; j < this.size; j++) {
-			helperStr += board[i][j];
+			if (board[i][j] == 1) {
+				helperStr += "a";
+			} else if (board[i][j] == -1) {
+				helperStr += "x";
+			} else {
+				helperStr += "o";
+			}
 		}
 		helperStr += "0";
 	}
-	var regex = "(" + who + "){5,}";
+	var regex = who + "{5,}";
 	var match = helperStr.match(regex);
 	return match != null;
 };
+
+Board.prototype.checkVertical = function (who, board) {
+	if (!board) {
+		var board = this.getBoard();
+	}
+	return this.checkHorizontal(who, this.transposeBoard(board));
+};
+
+Board.prototype.checkDiagonal = function (who, board) {
+	if (!board) {
+		var board = this.getBoard();
+	}
+	return this.checkVertical(who, this.diagonalShiftBoard(board, 1)) || this.checkVertical(who, this.diagonalShiftBoard(board, -1));
+};
+
 
 Board.prototype.transposeBoard = function (board) {
 	// Make deep copy of board
@@ -71,13 +108,6 @@ Board.prototype.transposeBoard = function (board) {
 		}
 	}
 	return board2;
-};
-
-Board.prototype.checkVertical = function (who, board) {
-	if (!board) {
-		var board = this.getBoard();
-	}
-	return this.checkHorizontal(who, this.transposeBoard(board));
 };
 
 Board.prototype.diagonalShiftBoard = function (board, dir) {
@@ -98,12 +128,7 @@ Board.prototype.diagonalShiftBoard = function (board, dir) {
 	return board2;
 };
 
-Board.prototype.checkDiagonal = function (who, board) {
-	if (!board) {
-		var board = this.getBoard();
-	}
-	return this.checkVertical(who, this.diagonalShiftBoard(board, 1)) || this.checkVertical(who, this.diagonalShiftBoard(board, -1));
-};
+// END WIN CONDITION CODE
 
 Board.prototype.toString = function () {
 	var ret = ""
