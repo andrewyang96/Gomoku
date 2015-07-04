@@ -1,15 +1,15 @@
 // SGF File Format
 BOARDSIZEPX = 684;
 
-function drawBoard(boardData, mousePos) {
+function drawBoard(boardData, winner, mousePos) {
 	var canvas = document.getElementById("game-canvas");
 	var ctx = canvas.getContext("2d");
 	canvas.width = BOARDSIZEPX;
 	canvas.height = BOARDSIZEPX;
-	drawBoardHelper(ctx, BOARDSIZEPX, boardData, mousePos);
+	drawBoardHelper(ctx, BOARDSIZEPX, boardData, winner, mousePos);
 }
 
-function drawBoardHelper(ctx, boardSizePx, boardData, mousePos) {
+function drawBoardHelper(ctx, boardSizePx, boardData, winner, mousePos) {
 	// Draw 19 x 19 go board
 	ctx.strokeStyle = "black";
 	ctx.fillStyle = "black";
@@ -61,6 +61,13 @@ function drawBoardHelper(ctx, boardSizePx, boardData, mousePos) {
 			}
 		}
 	}
+
+	// Draw winner text
+	if (winner == 1) {
+		drawText(ctx, "Black wins!");
+	} else if (winner == -1) {
+		drawText(ctx, "White wins!");
+	}
 }
 
 function drawPiece(ctx, centerX, centerY, blockSize, owner) {
@@ -84,4 +91,10 @@ function drawIndicator(ctx, centerX, centerY, blockSize) {
 	ctx.beginPath();
 	ctx.arc(centerX, centerY, 0.4 * blockSize, 0, 2 * Math.PI, false);
 	ctx.fill();
+}
+
+function drawText(ctx, msg) {
+	ctx.fillStyle = "blue";
+	ctx.font = "bold 40pt Tahoma";
+	ctx.fillText(msg, 100, 100);
 }

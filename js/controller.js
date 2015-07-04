@@ -9,8 +9,7 @@ $(document).ready(function () {
 			var pos = b.getPos(BOARDSIZEPX, mouseX, mouseY);
 			try {
 				b.makeMove(pos.row, pos.col);
-				console.log("1:  " + b.checkWin(1) + ", -1: " + b.checkWin(-1));
-				drawBoard(b.getBoard());
+				drawBoard(b.getBoard(), b.getWinner());
 			} catch (err) {
 				console.log(err);
 			}
@@ -23,11 +22,11 @@ $(document).ready(function () {
 		var mouseX = event.pageX - offset.left;
 		var mouseY = event.pageY - offset.top;
 		var pos = b.getPos(BOARDSIZEPX, mouseX, mouseY);
-		drawBoard(b.getBoard(), pos);
+		drawBoard(b.getBoard(), b.getWinner(), pos);
 	});
 
 	$("#game-canvas").mouseout(function (event) {
 		// Ensure that indicator goes away.
-		drawBoard(b.getBoard());
+		drawBoard(b.getBoard(), b.getWinner());
 	});
 });

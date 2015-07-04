@@ -10,6 +10,7 @@ var Board = function () {
 		}
 	}
 	this.turn = 1; // 1 = black, -1 = white
+	this.winner = 0;
 };
 
 Board.prototype.getPos = function (boardSizePx, mouseX, mouseY) {
@@ -25,12 +26,35 @@ Board.prototype.whoseTurn = function () {
 	return this.turn;
 };
 
+Board.prototype.getWinner = function () {
+	return this.winner;
+};
+
 Board.prototype.makeMove = function (row, col) {
-	if (this.board[row][col]) {
+	if (this.board[row][col] != 0) {
 		throw "Cannot place piece on occupied spot " + col + ", " + row;
+	} else if (this.winner != 0) {
+		if (this.winner == 1) {
+			throw "Black has already won";
+		} else if (this.winner != 1) {
+			throw "White has already won";
+		} else {
+			throw "Winner has already been determined: not in (-1,0,1)";
+		}
 	}
 	this.board[row][col] = this.turn;
-	this.turn *= -1;
+	// Check for 5 in a row
+	var blackWin = b.checkWin(1);
+	if (blackWin) {
+		this.winner = 1;
+	} else {
+		var whiteWin = b.checkWin(-1);
+		if (whiteWin) {
+			this.winner = -1;
+		} else {
+			this.turn *= -1;
+		}
+	}
 };
 
 Board.prototype.getBoard = function () {
